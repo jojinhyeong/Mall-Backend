@@ -6,10 +6,9 @@ import org.jjh.mallapi.dto.PageRequestDTO;
 import org.jjh.mallapi.dto.PageResponseDTO;
 import org.jjh.mallapi.dto.TodoDTO;
 import org.jjh.mallapi.service.TodoService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -31,6 +30,32 @@ public class TodoController {
         log.info("list" + pageRequestDTO);
 
         return todoService.getList(pageRequestDTO);
+    }
+
+    @PostMapping("/")
+    public Map<String, Long> register(@RequestBody TodoDTO dto){
+
+        log.info("todoDTO: "+ dto);
+
+        Long tno = todoService.resgister(dto);
+
+        return Map.of("TNO", tno);
+    }
+
+    @PutMapping("/{tno}")
+    public Map<String, String> modify(@PathVariable("tno") Long tno, @RequestBody TodoDTO todoDTO){
+
+        todoDTO.setTno(tno);
+        todoService.modify(todoDTO);
+
+        return Map.of("RESULT", "SUCCESS");
+    }
+
+    @DeleteMapping("/{tno}")
+    public Map<String, String> remove(@PathVariable Long tno){
+        todoService.remove(tno);
+
+        return Map.of("RESULT", "SUCCESS");
     }
 
 }
