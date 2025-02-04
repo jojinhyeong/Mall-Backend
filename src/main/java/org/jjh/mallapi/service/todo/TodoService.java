@@ -1,4 +1,4 @@
-package org.jjh.mallapi.service;
+package org.jjh.mallapi.service.todo;
 
 import org.jjh.mallapi.domain.Todo;
 import org.jjh.mallapi.dto.PageRequestDTO;

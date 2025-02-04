@@ -1,9 +1,9 @@
 package org.jjh.mallapi.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jjh.mallapi.domain.Todo;
 import org.jjh.mallapi.dto.PageRequestDTO;
 import org.jjh.mallapi.dto.TodoDTO;
+import org.jjh.mallapi.service.todo.TodoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

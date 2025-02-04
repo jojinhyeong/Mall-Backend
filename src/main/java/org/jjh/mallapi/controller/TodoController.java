@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jjh.mallapi.dto.PageRequestDTO;
 import org.jjh.mallapi.dto.PageResponseDTO;
 import org.jjh.mallapi.dto.TodoDTO;
-import org.jjh.mallapi.service.TodoService;
+import org.jjh.mallapi.service.todo.TodoService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;

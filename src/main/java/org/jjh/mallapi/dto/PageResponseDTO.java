@@ -34,7 +34,6 @@ public class PageResponseDTO<E> {
 
         end =  end > last ? last: end;
 
-
         this.prev = start > 1;
 
         this.next =  totalCount > end * pageRequestDTO.getSize();
