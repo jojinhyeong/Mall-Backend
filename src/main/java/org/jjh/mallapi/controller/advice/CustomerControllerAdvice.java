@@ -1,5 +1,6 @@
 package org.jjh.mallapi.controller.advice;
 
+import org.jjh.mallapi.util.CustomJWTException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,4 +23,12 @@ public class CustomerControllerAdvice {
 
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(Map.of("msg", e.getMessage()));
     }
+    @ExceptionHandler(CustomJWTException.class)
+    protected ResponseEntity<?> handlerJWTException(CustomJWTException e){
+
+        String msg = e.getMessage();
+
+        return ResponseEntity.ok().body(Map.of("error", msg));
+    }
+
 }
