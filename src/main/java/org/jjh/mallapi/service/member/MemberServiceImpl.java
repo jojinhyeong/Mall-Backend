@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jjh.mallapi.domain.Member;
 import org.jjh.mallapi.domain.MemberRole;
 import org.jjh.mallapi.dto.MemberDTO;
+import org.jjh.mallapi.dto.MemberModifyDTO;
 import org.jjh.mallapi.repository.MemberRepository;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,38 +32,63 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO getKakaoMember(String accessToken) {
 
+        log.info("----------------------------");
+        log.info("-----------getKakaoMember log-----------------");
         //카카오 연동 닉네임 -- 이메일 주소에 해당
         String nickname = getEmailFromKakaoAccessToken(accessToken);
-
+        //log.info(nickname);
         //데이터베이스에 있는지 확인
         Optional<Member> result = memberRepository.findById(nickname);
+        //log.info(String.valueOf(result));
 
         //기존의 회원
         if (result.isPresent()) {
             MemberDTO memberDTO = entityToDTO(result.get());
+            //log.info("-----기존회원-------");
+            //log.info(String.valueOf(memberDTO));
             return memberDTO;
         }
 
         //회원이 아니었다면 닉네임은 '소셜회원’으로 패스워드는 임의로 생성
         Member socialMember = makeSocialMember(nickname);
         memberRepository.save(socialMember);
+
         MemberDTO memberDTO = entityToDTO(socialMember);
-
-
-        return null;
+        //log.info("-----뉴회원-------");
+        //log.info(String.valueOf(memberDTO));
+        return memberDTO;
     }
 
-    private Member makeSocialMember(String email) {
+    @Override
+    public void modifyMember(MemberModifyDTO memberModifyDTO) {
+
+        Optional<Member> result =
+                memberRepository.findById(memberModifyDTO.getEmail());
+
+        Member member = result.orElseThrow();
+
+        member.changePw(passwordEncoder.encode(memberModifyDTO.getPw()));
+
+        member.changeSocial(false);
+
+        member.changeNickname(memberModifyDTO.getNickname());
+
+        memberRepository.save(member);
+
+    }
+
+    private Member makeSocialMember(String nickname) {
         String tempPassword = makeTempPassword();
 
         log.info("tempPassword: {}", tempPassword);
 
         Member member = Member.builder()
-                .email(email) //닉네임
+                .email(nickname) //닉네임
                 .pw(passwordEncoder.encode(tempPassword))
-                .nickname("Social Memver")
+                .nickname("Social Member")
                 .social(true)
                 .build();
+
         member.addRole(MemberRole.USER);
 
         return member;
